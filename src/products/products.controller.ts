@@ -10,6 +10,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { UpdateProductDto } from './dto/update-product.dto.js';
 
 interface Product {
   id: number;
@@ -41,9 +42,12 @@ export class ProductsController {
     return product;
   }
 
-  @Put(':id') 
+  @Put(':id')
   @HttpCode(200) // 200 OK
-  update(@Param('id') id: number, @Body() updateProduct: any): Product {
+  update(
+    @Param('id') id: number,
+    @Body() updateProduct: UpdateProductDto,
+  ): Product {
     const product = this.products.find((product) => product.id == id);
     if (!product) {
       throw new NotFoundException(`Product with id:${id} not found`);
