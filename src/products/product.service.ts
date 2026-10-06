@@ -36,12 +36,20 @@ export class ProductService {
   // Create a single product. The id is always generated here.
   create(product: CreateProductDto): ProductDto {
     const newProduct: ProductDto = {
-      id: this.nextId(), // Generate a new id for the product
-      ...product,
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      quantity: product.quantity,
+      id: this.nextId(),
     };
     this.products.push(newProduct);
     this.logger.log(`Product created: ${newProduct.name}`);
     return newProduct;
+  }
+
+  // Create every product in the request array.
+  createMany(products: CreateProductDto[]): ProductDto[] {
+    return products.map((product) => this.create(product));
   }
 
   // Update a product by id
