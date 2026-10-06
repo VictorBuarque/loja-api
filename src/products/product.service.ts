@@ -1,32 +1,33 @@
 import { ProductDto } from './dto/product.dto.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { UpdateProductDto } from './dto/update-product.dto.js';
+import { Products } from '../entities/products.js';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 // Injectable decorator
 @Injectable()
 // ProductService class that implements the ProductService interface
 export class ProductService {
-  // Private products array
-  private products: ProductDto[] = [];
   // Private logger
   private readonly logger = new Logger(ProductService.name);
-  // Generate a new id for a product
-  private nextId(): number {
-    return (
-      this.products.reduce((max, product) => Math.max(max, product.id), 0) + 1
-    );
-  }
+
+  // Constructor to inject the product repository
+  constructor(
+    @InjectRepository(Products)
+    private readonly productRepository: Repository<Products>, // Inject the product repository to use the product repository
+  ) { }
 
   // Find all products
-  findAll(): ProductDto[] {
+  async findAll(): Promise<Products[]> {
     this.logger.log('Finding all products');
-    return this.products;
+    return await this.productRepository.find();
   }
 
-  // Find a product by id
-  findById(id: number): ProductDto {
-    const product = this.products.find((product) => product.id == id);
+  // Find a product by id.
+  async findById(id: number): Promise<Products> {
+    const product = await this.productRepository.findOne({ where: { id } });
     if (!product) {
       throw new NotFoundException(`Product with id:${id} not found`);
     }
@@ -34,52 +35,49 @@ export class ProductService {
   }
 
   // Create a single product. The id is always generated here.
-  create(product: CreateProductDto): ProductDto {
-    const newProduct: ProductDto = {
-      name: product.name,
-      price: product.price,
-      description: product.description,
-      quantity: product.quantity,
-      id: this.nextId(),
-    };
-    this.products.push(newProduct);
-    this.logger.log(`Product created: ${newProduct.name}`);
-    return newProduct;
+  async create(product: CreateProductDto): Promise<Products> {
+    const newProduct = new Products();
+    newProduct.name = product.name;
+    newProduct.price = product.price;
+    newProduct.description = product.description;
+    newProduct.quantity = product.quantity;
+
+    if (newProduct.name === '' || newProduct.price === 0 || newProduct.description === '' || newProduct.quantity === 0) {
+      throw new BadRequestException('Name, price, description, and quantity are required');
+    }
+    return await this.productRepository.save(newProduct);
   }
 
   // Create every product in the request array.
-  createMany(products: CreateProductDto[]): ProductDto[] {
-    return products.map((product) => this.create(product));
+  async createMany(products: CreateProductDto[]): Promise<Products[]> {
+    return this.productRepository.save(products);
   }
 
   // Update a product by id
-  updateById(id: number, updateProduct: UpdateProductDto): ProductDto {
-    const product = this.findById(id);
+  async updateById(id: number, updateProduct: UpdateProductDto): Promise<Products> {
+    const product = await this.findById(id);
     Object.assign(product, updateProduct);
-    return product;
+    return await this.productRepository.save(product);
   }
 
   // Update a product by id partially
-  updatePartialById(
+  async updatePartialById(
     id: number,
     updateProduct: Partial<UpdateProductDto>,
-  ): ProductDto {
-    const product = this.findById(id);
+  ): Promise<Products> {
+    const product = await this.findById(id);
     Object.assign(product, updateProduct);
-    return product;
+    return await this.productRepository.save(product);
   }
 
   // Delete a product by id
-  deleteById(id: number): void {
-    const product = this.findById(id);
-    if (!product) {
-      throw new NotFoundException(`Product with id:${id} not found`);
-    }
-    this.products = this.products.filter((product) => product.id !== id);
+  async deleteById(id: number): Promise<void> {
+    await this.productRepository.delete(id);
   }
 
   // Delete all products
-  deleteAll(): void {
-    this.products = [];
+  async deleteAll(): Promise<void> {
+    await this.productRepository.delete({});
+    this.productRepository.delete({});
   }
 }
