@@ -1,77 +1,61 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   HttpCode,
-  NotFoundException,
   Param,
+  ParseArrayPipe,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
 import { UpdateProductDto } from './dto/update-product.dto.js';
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-}
+import { ProductDto } from './dto/product.dto.js';
+import { CreateProductDto } from './dto/create-product.dto.js';
+import { ProductService } from './product.service.js';
 
 @Controller('products')
 export class ProductsController {
-  private products: Product[] = [];
+  // Inject the ProductService
+  constructor(private readonly productService: ProductService) {}
 
+  // Controller methods
+  // Find all products
   @Get()
   @HttpCode(200) // 200 OK
-  findAll(): Product[] {
-    return this.products;
+  findAll(): ProductDto[] {
+    return this.productService.findAll();
   }
 
+  // Find a product by id
   @Get(':id')
   @HttpCode(200) // 200 OK
-  findById(@Param('id') id: number): Product {
-    console.log(id);
-    const product = this.products.find(
-      // If you put === it will return the entire array of products
-      (product) => product.id == id,
-    );
-    if (!product) {
-      throw new NotFoundException(`Product with id:${id} not found`);
-    }
-    return product;
+  findById(@Param('id') id: number): ProductDto {
+    return this.productService.findById(id);
   }
 
+  // Update a product by id partially
+  @Patch(':id')
+  @HttpCode(200) // 200 OK
+  updatePartial(
+    @Param('id') id: number,
+    @Body() updateProduct: Partial<UpdateProductDto>,
+  ): ProductDto {
+    return this.productService.updatePartialById(id, updateProduct);
+  }
+
+  // Update a product by id
   @Put(':id')
   @HttpCode(200) // 200 OK
   update(
     @Param('id') id: number,
     @Body() updateProduct: UpdateProductDto,
-  ): Product {
-    const product = this.products.find((product) => product.id == id);
-    if (!product) {
-      throw new NotFoundException(`Product with id:${id} not found`);
-    }
-    // Update the product with the new data
-    Object.assign(product, updateProduct);
-    return product;
+  ): ProductDto {
+    return this.productService.updateById(id, updateProduct);
   }
 
-  @Delete(':id')
-  @HttpCode(204) // 204 No Content
-  delete(@Param('id') id: number): void {
-    // Find the index of the product to delete
-    const index = this.products.findIndex(
-      (product: Product) => product.id == id,
-    );
-    if (index === -1) {
-      throw new NotFoundException(`Product with id:${id} not found`);
-    }
-    // Delete the product from the array
-    this.products.splice(index, 1);
-    return console.log(`Product with id:${id} deleted`);
-  }
-
+  // Create a new product
   @Post()
   @HttpCode(201) // 201 Created
   /**
@@ -79,22 +63,23 @@ export class ProductsController {
    * @param body - The body of the request
    * @returns The created product
    */
-  create(@Body() body: { name: string; price: number }[]): Product[] {
-    console.log(body);
-    if (!Array.isArray(body)) {
-      throw new BadRequestException('Body must be an array of products');
-    }
+  create(
+    @Body(
+      new ParseArrayPipe({
+        items: CreateProductDto,
+        whitelist: true,
+      }),
+    )
+    body: CreateProductDto[],
+  ): ProductDto[] {
+    return this.productService.createMany(body);
+  }
 
-    const created = body.map((item, index) => {
-      const product: Product = {
-        id: this.products.length + index + 1,
-        name: item.name,
-        price: item.price,
-      };
-      return product;
-    });
-
-    this.products.push(...created);
-    return created;
+  // Delete a product by id
+  @Delete(':id')
+  @HttpCode(204) // 204 No Content
+  delete(@Param('id') id: number): void {
+    // Find the index of the product to delete
+    return this.productService.deleteById(id);
   }
 }
