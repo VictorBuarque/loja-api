@@ -11,7 +11,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { UpdateProductDto } from './dto/update-product.dto.js';
-import { ProductDto } from './dto/product.dto.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { ProductService } from './product.service.js';
 import { Products } from '../entities/products.js';
