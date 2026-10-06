@@ -55,14 +55,12 @@ export class ProductsController {
     return this.productService.updateById(id, updateProduct);
   }
 
-  // Create a new product
+  /**
+   * Create products from an array.
+   * Each item is saved by the service, which assigns the id.
+   */
   @Post()
   @HttpCode(201) // 201 Created
-  /**
-   * Create a new product
-   * @param body - The body of the request
-   * @returns The created product
-   */
   create(
     @Body(
       new ParseArrayPipe({
