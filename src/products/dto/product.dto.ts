@@ -8,7 +8,6 @@ import {
   MinLength,
 } from 'class-validator';
 
-
 export class ProductDto {
   @IsInt()
   @IsNotEmpty()
