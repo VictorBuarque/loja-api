@@ -6,7 +6,10 @@ import {
   MaxLength,
   MinLength,
   IsInt,
+  IsOptional,
+  IsUrl,
 } from 'class-validator';
+import { Url } from 'url';
 
 export class CreateProductDto {
   // Name validator
@@ -29,4 +32,9 @@ export class CreateProductDto {
   @IsNotEmpty()
   @Min(0, { message: 'Quantity must be greater than 0' })
   quantity: number;
+
+  @IsOptional()
+  @IsUrl({}, { message: 'Image must be a valid URL' })
+  @MaxLength(255, { message: 'Image must be less than 255 characters' })
+  image?: string | null;
 }
