@@ -5,6 +5,7 @@ import {
   MinLength,
   Min,
   MaxLength,
+  IsInt,
 } from 'class-validator';
 
 export class UpdateProductDto {
@@ -23,4 +24,9 @@ export class UpdateProductDto {
   @MinLength(10, { message: 'Description must be at least 10 characters' })
   @MaxLength(1000, { message: 'Description must be less than 1000 characters' })
   description?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0, { message: 'Quantity must be greater than 0' })
+  quantity?: number;
 }
