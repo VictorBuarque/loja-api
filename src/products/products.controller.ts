@@ -14,6 +14,7 @@ import { UpdateProductDto } from './dto/update-product.dto.js';
 import { ProductDto } from './dto/product.dto.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { ProductService } from './product.service.js';
+import { Products } from '../entities/products.js';
 
 @Controller('products')
 export class ProductsController {
@@ -24,14 +25,14 @@ export class ProductsController {
   // Find all products
   @Get()
   @HttpCode(200) // 200 OK
-  findAll(): ProductDto[] {
+  findAll(): Promise<Products[]> {
     return this.productService.findAll();
   }
 
   // Find a product by id
   @Get(':id')
   @HttpCode(200) // 200 OK
-  findById(@Param('id') id: number): ProductDto {
+  findById(@Param('id') id: number): Promise<Products> {
     return this.productService.findById(id);
   }
 
@@ -41,7 +42,7 @@ export class ProductsController {
   updatePartial(
     @Param('id') id: number,
     @Body() updateProduct: Partial<UpdateProductDto>,
-  ): ProductDto {
+  ): Promise<Products> {
     return this.productService.updatePartialById(id, updateProduct);
   }
 
@@ -51,7 +52,7 @@ export class ProductsController {
   update(
     @Param('id') id: number,
     @Body() updateProduct: UpdateProductDto,
-  ): ProductDto {
+  ): Promise<Products> {
     return this.productService.updateById(id, updateProduct);
   }
 
@@ -69,15 +70,15 @@ export class ProductsController {
       }),
     )
     body: CreateProductDto[],
-  ): ProductDto[] {
+  ): Promise<Products[]> {
     return this.productService.createMany(body);
   }
 
   // Delete a product by id
   @Delete(':id')
   @HttpCode(204) // 204 No Content
-  delete(@Param('id') id: number): void {
+  async delete(@Param('id') id: number): Promise<void> {
     // Find the index of the product to delete
-    return this.productService.deleteById(id);
+    await this.productService.deleteById(id);
   }
 }
