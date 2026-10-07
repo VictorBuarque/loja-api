@@ -1,6 +1,10 @@
-import { ProductDto } from './dto/product.dto.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdateProductDto } from './dto/update-product.dto.js';
 import { Products } from '../entities/products.js';
 import { Repository } from 'typeorm';
@@ -17,7 +21,7 @@ export class ProductService {
   constructor(
     @InjectRepository(Products)
     private readonly productRepository: Repository<Products>, // Inject the product repository to use the product repository
-  ) { }
+  ) {}
 
   // Find all products
   async findAll(): Promise<Products[]> {
@@ -41,9 +45,17 @@ export class ProductService {
     newProduct.price = product.price;
     newProduct.description = product.description;
     newProduct.quantity = product.quantity;
+    newProduct.image = product.image;
 
-    if (newProduct.name === '' || newProduct.price === 0 || newProduct.description === '' || newProduct.quantity === 0) {
-      throw new BadRequestException('Name, price, description, and quantity are required');
+    if (
+      newProduct.name === '' ||
+      newProduct.price === 0 ||
+      newProduct.description === '' ||
+      newProduct.quantity === 0
+    ) {
+      throw new BadRequestException(
+        'Name, price, description, and quantity are required',
+      );
     }
     return await this.productRepository.save(newProduct);
   }
@@ -54,7 +66,10 @@ export class ProductService {
   }
 
   // Update a product by id
-  async updateById(id: number, updateProduct: UpdateProductDto): Promise<Products> {
+  async updateById(
+    id: number,
+    updateProduct: UpdateProductDto,
+  ): Promise<Products> {
     const product = await this.findById(id);
     Object.assign(product, updateProduct);
     return await this.productRepository.save(product);
