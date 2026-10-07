@@ -1,7 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsEnum, IsInt, IsNotEmpty, IsNumber, IsUUID } from "class-validator";
+import { ArrayNotEmpty, IsArray, IsEnum, IsInt, IsNotEmpty, IsNumber, IsUUID, ValidateNested } from "class-validator";
 import { OrderStatus } from "../../../entities/orders/orders.js";
 import { OrderItemDto } from "./order-item.dto.js";
+import { Type } from "class-transformer";
 
 export class OrdersDto {
     @ApiProperty({ example: 1 })
@@ -20,12 +21,14 @@ export class OrdersDto {
     total: number;
 
     @ApiProperty({ example: 'pending' })
-    @IsEnum(OrderStatus)
+    @IsEnum(OrderStatus) // Validate the status to be a valid order status
     @IsNotEmpty()
     status: OrderStatus;
 
     @ApiProperty({ example: [{ productId: 1, quantity: 1 }] })
     @IsArray()
-    @IsNotEmpty()
-    items: OrderItemDto[];
+    @ValidateNested({ each: true }) // Validate each item in the array
+    @ArrayNotEmpty()
+    @Type(() => OrderItemDto) // Transform the array of OrderItemDto to an array of OrderItemDto
+    items: OrderItemDto[]; 
 }
