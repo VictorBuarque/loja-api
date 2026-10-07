@@ -13,9 +13,9 @@ import { Products } from '../../entities/products.js';
 // Injectable decorator
 @Injectable()
 // ProductService class that implements the ProductService interface
-export class ProductService {
+export class ProductsService {
   // Private logger
-  private readonly logger = new Logger(ProductService.name);
+  private readonly logger = new Logger(ProductsService.name);
 
   // Constructor to inject the product repository
   constructor(
