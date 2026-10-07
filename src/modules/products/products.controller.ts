@@ -20,14 +20,14 @@ import {
 } from '@nestjs/swagger';
 import { UpdateProductDto } from './dto/update-product.dto.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
-import { ProductService } from './product.service.js';
-import { Products } from '../entities/products.js';
+import { ProductsService } from './products.service.js';
+import { Products } from '../../entities/products.js';
 import { ProductDto } from './dto/product.dto.js';
 import { ErrorResponseDto } from './dto/errror-response.dto.js';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductsService) {}
 
   @Get()
   @HttpCode(200)
