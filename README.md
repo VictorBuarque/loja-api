@@ -23,6 +23,12 @@ A API sobe em `http://localhost:3000`. A porta pode ser alterada com a variável
 
 Em desenvolvimento o TypeORM usa `synchronize: true`: a tabela `products` é criada e atualizada a partir da entidade. O `id` é gerado pelo Postgres.
 
+## Swagger
+
+Com a API no ar, a documentação interativa fica em [http://localhost:3000/api-docs](http://localhost:3000/api-docs).
+
+A página lista as rotas, o body do `POST` e as respostas `200`, `201`, `204`, `400` e `404`. O botão **Try it out** envia a requisição para a API local. A raiz `http://localhost:3000` continua respondendo `Hello World!`.
+
 ## Endpoints
 
 | Método | Rota | Status | Descrição |
@@ -67,7 +73,7 @@ A resposta inclui o `id` gerado para cada item:
 ]
 ```
 
-O `PUT` e o `PATCH` aceitam qualquer um destes campos: `name`, `price`, `description` e `quantity`.
+O `PUT` e o `PATCH` aceitam qualquer um destes campos: `name`, `price`, `description`, `quantity` e `image`.
 
 ## Testes
 
