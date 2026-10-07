@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
 import { Orders } from "./orders.js";
 
 @Entity('order_items')
@@ -19,5 +19,5 @@ export class OrderItem {
   quantity: number;
 
   @ManyToOne(() => Orders, (order) => order.items, { onDelete: 'CASCADE' })
-  order: Orders;
+  order: Relation<Orders>;
 }

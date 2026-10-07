@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, type Relation } from "typeorm";
 import { OrderItem } from "./order-item.entity.js";
 
 export enum OrderStatus {
@@ -30,6 +30,6 @@ export class Orders {
   updatedAt: Date;
 
   // One to many relationship with OrderItem with cascade and eager options
-  @OneToMany(() => OrderItem, (item) => item.orderId, {cascade: true, eager: true})
-  items: OrderItem[];
+  @OneToMany(() => OrderItem, (item) => item.order, { cascade: true, eager: true })
+  items: Relation<OrderItem[]>; // Don't forget to add the Relation to the OrderItem entity
 }
