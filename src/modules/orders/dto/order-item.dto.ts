@@ -1,18 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsNotEmpty, IsNumber } from "class-validator";
-import { OrdersDto } from "./orders.dto.js";
 
 export class OrderItemDto {
-    @ApiProperty({ example: 1 })
-    @IsInt()
-    @IsNotEmpty()
-    id: number;
-
-    @ApiProperty({ example: 1 })
-    @IsInt()
-    @IsNotEmpty()
-    orderId: number;
-
     @ApiProperty({ example: 1 })
     @IsInt()
     @IsNotEmpty()
@@ -27,10 +16,4 @@ export class OrderItemDto {
     @IsNumber()
     @IsNotEmpty()
     price: number;
-
-    @ApiProperty({ example: 1 })
-    @IsInt()
-    @IsNotEmpty()
-    order: OrdersDto;
-  
 }       
