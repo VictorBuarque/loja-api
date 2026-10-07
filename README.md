@@ -38,7 +38,7 @@ Em desenvolvimento o TypeORM usa `synchronize: true`: a tabela `products` é cri
 
 O `POST` aceita um array. Um objeto solto responde `400`. Campos fora do contrato também respondem `400`.
 
-Cada item precisa de `name`, `price` (maior que 0.01), `description` (de 10 a 1000 caracteres) e `quantity` (inteiro a partir de 0). `image` é opcional: uma URL de até 255 caracteres, ou `null`.
+Cada item precisa de `name`, `price` (maior que 0.01), `description` (de 10 a 255 caracteres) e `quantity` (inteiro a partir de 0). `image` é opcional: uma URL de até 255 caracteres, ou `null`.
 
 ```json
 [
