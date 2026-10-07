@@ -25,4 +25,10 @@ export class ErrorResponseDto {
     example: 400,
   })
   statusCode: number;
+
+  @ApiProperty({
+    description: 'Path of the request that caused the error',
+    example: '/api/orders',
+  })
+  path: string;
 }
