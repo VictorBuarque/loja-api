@@ -1,5 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, type Relation } from "typeorm";
-import { Orders } from "./orders.js";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from 'typeorm';
+import { Orders } from './orders.js';
 
 @Entity('order_items')
 export class OrderItem {
