@@ -6,9 +6,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UpdateProductDto } from './dto/update-product.dto.js';
-import { Products } from '../entities/products.js';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Products } from '../../entities/products.js';
 
 // Injectable decorator
 @Injectable()
