@@ -5,13 +5,9 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import {
   OrdersModule,
-  OrdersController,
-  OrdersService,
 } from './modules/orders/index.js';
 import {
   ProductsModule,
-  ProductsController,
-  ProductsService,
 } from './modules/products/index.js';
 
 @Module({
@@ -40,7 +36,7 @@ import {
     ProductsModule,
     OrdersModule,
   ],
-  controllers: [AppController, OrdersController, ProductsController],
-  providers: [AppService, OrdersService, ProductsService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule { }
