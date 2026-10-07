@@ -23,7 +23,8 @@ import { CreateProductDto } from './dto/create-product.dto.js';
 import { ProductsService } from './products.service.js';
 import { Products } from '../../entities/products.js';
 import { ProductDto } from './dto/product.dto.js';
-import { ErrorResponseDto } from './dto/errror-response.dto.js';
+import { ErrorResponseDto } from '../../common/dto/error-response.dto.js';
+
 
 @Controller('products')
 export class ProductsController {
