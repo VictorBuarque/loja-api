@@ -1,9 +1,18 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller.js';
-import { AppService } from './app.service.js';
-import { ProductsModule } from './products/products.module.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import {
+  OrdersModule,
+  OrdersController,
+  OrdersService,
+} from './modules/orders/index.js';
+import {
+  ProductsModule,
+  ProductsController,
+  ProductsService,
+} from './modules/products/index.js';
 
 @Module({
   imports: [
@@ -29,8 +38,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
 
     ProductsModule,
+    OrdersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, OrdersController, ProductsController],
+  providers: [AppService, OrdersService, ProductsService],
 })
-export class AppModule {}
+export class AppModule { }
